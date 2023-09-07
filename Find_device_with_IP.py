@@ -23,6 +23,7 @@ def prRed(skk): print("\033[91m {}\033[00m" .format(skk))
 
 def switchConnect():
     
+    prGreen('Please enter the credentials for the switch: \n')
     userName = input('Username: ')
     userPass = getpass.getpass()
     ipaddr = input('What is the IP of the core switch? ')
@@ -69,6 +70,7 @@ def switchConnect():
 
 def findSwitch():
 
+    prGreen('Please enter the credentials for the switch: \n')
     userName = input('Username: ')
     userPass = getpass.getpass()
     ipaddr = input('What is the IP of the core switch? ')
@@ -122,7 +124,7 @@ def findSwitch():
 
 def poPortDiscover():
 
-    print ('Switch credentials:')
+    prGreen('Please enter the credentials for the switch: \n')
     userName = input('Username: ')
     userPass = getpass.getpass()
     ipaddr = input('What is the IP of the switch that contains the Po port? ')
