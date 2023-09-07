@@ -1,4 +1,4 @@
-# import modules needed and set up ssh connection parameters
+#Import modules needed and set up ssh connection parameters
 import paramiko
 import datetime
 import getpass
