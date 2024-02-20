@@ -15,6 +15,7 @@ time_now  = datetime.datetime.now().strftime('%m_%d_%Y_%H_%M_%S')
 switchLocation = input('Which site are these switches located? (ex. USEP)')
 switchLocation = switchLocation.upper()
 searchTerm = 'Internet'
+global_var_macadd = "blank"
 
 #Text formatting defenitions. These are used to make the console text a different color.
 def prGreen(skk): print("\033[92m {}\033[00m" .format(skk))
@@ -65,6 +66,51 @@ def switchConnect():
 
     except IndexError:
         prRed('No IP was found.\n\n')
+
+    
+    global global_var_macadd 
+    global_var_macadd = macAdd
+
+
+    menu()
+    
+
+
+def nextSwitch():
+    
+    prGreen('Please enter the credentials for the switch: \n')
+    userName = input('Username: ')
+    userPass = getpass.getpass()
+    ipaddr = input('What is the IP of the current switch? ')
+    clientIP = input('What is the IP of the device that you are looking for? ')
+    
+    try:
+     
+        addTable = 'sh mac address-table address ' + global_var_macadd
+   
+
+        #Find the connecting port
+        ssh.connect(hostname=ipaddr, username=userName, password=userPass, port=port)
+        _stdin, _stdout, _stderr = ssh.exec_command(addTable)
+        list = _stdout.readlines()
+        searchList = [list.index(i) for i in list if global_var_macadd in i]
+
+        #split list at line containing "hostname" to get hostname.
+        indexValue = searchList[0]
+        splitList = list[indexValue]
+        switchPort = splitList.rsplit(' ',2)[2].rstrip()
+        prGreen ('The switch port is connected to: ' + switchPort + '\n\n')
+
+
+    except paramiko.ssh_exception.AuthenticationException:
+        prRed('Failed to connect to switch. Check credentials.\n')
+        switchConnect()
+        
+        ssh.close
+
+    except IndexError:
+        prRed('No IP was found.\n\n')
+
 
     menu()
 
@@ -169,7 +215,7 @@ def menu():
         elif userChoice == 2:
             findSwitch()
         elif userChoice == 3:
-            switchConnect()
+            nextSwitch()
         elif userChoice == 4:
             poPortDiscover()
         elif userChoice == 0:
